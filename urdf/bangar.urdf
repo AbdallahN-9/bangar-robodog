@@ -1,0 +1,466 @@
+<robot name="bangar">
+  <link name="world"/>
+
+   <joint name="world_to_base" type="fixed">
+   <origin xyz="0 0 0" rpy="1.5708 0 0" />
+   <parent link="world"/>
+   <child link="base_link"/>
+   </joint>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0.00250000000000006 0" rpy="0 0 0" />
+      <mass value="0.343903626200047" />
+      <inertia ixx="0.00491345484236187" ixy="6.75209481308794E-23" ixz="9.56560652490405E-17"
+               iyy="0.00567401345499297" iyz="-5.51940362752493E-21" izz="0.000761991544406925" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/base_link.STL" /></geometry>
+      <material name=""><color rgba="1 1 1 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/base_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <link name="left_side_link">
+    <inertial>
+      <origin xyz="0.0916207149155673 0.0293825036603796 -0.00341679023859331" rpy="0 0 0" />
+      <mass value="0.122569497291097" />
+      <inertia ixx="0.00140403619489622" ixy="-1.04966211515225E-09" ixz="-1.23875379054153E-07"
+               iyy="0.00135175741702045" iyz="6.20890609011411E-07" izz="5.27895068738471E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/left_side_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/left_side_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <!-- Fixed: left_side stays fixed -->
+  <joint name="left_side" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="left_side_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <link name="front_left_shoulder_link">
+    <inertial>
+      <origin xyz="-0.0242498427561751 -0.0615532399041465 -0.028205687060837" rpy="0 0 0" />
+      <mass value="0.111436500014166" />
+      <inertia ixx="0.000343151525758645" ixy="7.27108048623746E-06" ixz="-3.7830501022758E-06"
+               iyy="0.000103200990321563" iyz="-9.02486413113497E-05" izz="0.000311962726644771" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 -0.300260" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_left_shoulder_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.300260" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_left_shoulder_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <!-- Fixed: proper limits for revolute joint -->
+  <joint name="front_left_shoulder_joint" type="revolute">
+    <origin xyz="0.15992 0.030824 0.15001" rpy="0 0 0" />
+    <parent link="left_side_link" />
+    <child link="front_left_shoulder_link" />
+    <axis xyz="1 -2.1167E-05 -9.1685E-05" />
+    <limit lower="-0.8" upper="0.8" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="front_left_knee_link">
+    <inertial>
+      <origin xyz="0.0163780260957682 -0.024186201715927 0.0427447139754695" rpy="0 0 0" />
+      <mass value="0.0469764065146903" />
+      <inertia ixx="0.000115003731465052" ixy="9.25199470142066E-06" ixz="-1.62071012049242E-05"
+               iyy="8.99552098264021E-05" iyz="3.85584278751766E-05" izz="4.17691836399353E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_left_knee_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_left_knee_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="front_left_knee_joint" type="revolute">
+    <origin xyz="-0.053581 -0.12362 -0.03993" rpy="0 0 0" />
+    <parent link="front_left_shoulder_link" />
+    <child link="front_left_knee_link" />
+    <axis xyz="-1 2.1167E-05 9.1685E-05" />
+    <limit lower="-1.2" upper="1.2" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="front_left_wheel_link">
+    <inertial>
+      <origin xyz="-0.00345948367577542 3.08599354889028E-05 -0.000243325319884358" rpy="0 0 0" />
+      <mass value="0.0364044010438608" />
+      <inertia ixx="4.90745198318007E-05" ixy="-5.23308940466511E-10" ixz="-2.34496946233023E-09"
+               iyy="2.49257369703414E-05" iyz="-2.48564969046693E-10" izz="2.49045978562694E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_left_wheel_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_left_wheel_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <!-- Wheel: continuous so it can spin freely -->
+  <joint name="front_left_wheel_joint" type="continuous">
+    <origin xyz="0.045701 -0.060692 0.098927" rpy="0 0 0" />
+    <parent link="front_left_knee_link" />
+    <child link="front_left_wheel_link" />
+    <axis xyz="1 -2.1167E-05 -9.1685E-05" />
+  </joint>
+
+  <link name="back_left_shoulder_link">
+    <inertial>
+      <origin xyz="-0.024277343823541 -0.0614127013324818 -0.0279336093794531" rpy="0 0 0" />
+      <mass value="0.111436501193758" />
+      <inertia ixx="0.000343151527784128" ixy="7.27033134841043E-06" ixz="-3.78449369812867E-06"
+               iyy="0.000103165125527687" iyz="-9.02071431964769E-05" izz="0.000311998595046311" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_left_shoulder_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_left_shoulder_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <!-- Fixed: back_left_shoulder changed from fixed to revolute so it can move -->
+  <joint name="back_left_shoulder_joint" type="revolute">
+    <origin xyz="0.15992 0.030824 -0.15001" rpy="0 0 0" />
+    <parent link="left_side_link" />
+    <child link="back_left_shoulder_link" />
+    <axis xyz="1 -2.1167E-05 -9.1685E-05" />
+    <limit lower="-0.8" upper="0.8" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="back_left_knee_link">
+    <inertial>
+      <origin xyz="0.0163780267171882 -0.0241777054605389 0.0427495200491601" rpy="0 0 0" />
+      <mass value="0.0469764065207139" />
+      <inertia ixx="0.000115003730996126" ixy="9.2487739889618E-06" ixz="-1.62089407217268E-05"
+               iyy="8.99705351707301E-05" iyz="3.85488475607292E-05" izz="4.17538587787389E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_left_knee_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_left_knee_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="back_left_knee_joint" type="revolute">
+    <origin xyz="-0.053609 -0.12348 -0.038963" rpy="0 0 0" />
+    <parent link="back_left_shoulder_link" />
+    <child link="back_left_knee_link" />
+    <axis xyz="-1 2.1167E-05 9.1685E-05" />
+    <limit lower="-1.2" upper="1.2" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="back_left_wheel_link">
+    <inertial>
+      <origin xyz="-0.00311043056266247 0.00343350444922308 -0.000594060142661279" rpy="0 0 0" />
+      <mass value="0.0364044017227486" />
+      <inertia ixx="4.9074520095698E-05" ixy="-4.99042727389426E-10" ixz="-2.08701996387899E-09"
+               iyy="2.49257371479056E-05" iyz="-2.4849390943564E-10" izz="2.49045978738901E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_left_wheel_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_left_wheel_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="back_left_wheel_joint" type="continuous">
+    <origin xyz="0.045352 -0.064075 0.099293" rpy="0 0 0" />
+    <parent link="back_left_knee_link" />
+    <child link="back_left_wheel_link" />
+    <axis xyz="1 -2.1167E-05 -9.1685E-05" />
+  </joint>
+
+  <link name="right_side_link">
+    <inertial>
+      <origin xyz="-0.0958938589842034 0.0325565576507896 -0.000443152444056238" rpy="0 0 0" />
+      <mass value="0.122569497291098" />
+      <inertia ixx="0.00140403619489626" ixy="-1.04897582174696E-09" ixz="-1.23875219915196E-07"
+               iyy="0.00135175740981989" iyz="6.28377643997383E-07" izz="5.27895140743918E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/right_side_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/right_side_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <!-- Fixed: right_side changed from continuous to fixed - was causing dislocation -->
+  <joint name="right_side" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="right_side_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <link name="front_right_shoulder_link">
+    <inertial>
+      <origin xyz="0.0242695314756922 -0.0614083034868564 -0.0279500671367425" rpy="0 0 0" />
+      <mass value="0.111437039455002" />
+      <inertia ixx="0.000343154721624471" ixy="-7.29809879433052E-06" ixz="3.77362272396463E-06"
+               iyy="0.00010320146557749" iyz="-9.0246819210571E-05" izz="0.000311964079702084" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_right_shoulder_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_right_shoulder_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <!-- Fixed: front_right_shoulder changed from fixed to revolute -->
+  <joint name="front_right_shoulder_joint" type="revolute">
+    <origin xyz="-0.16418 0.030684 0.15002" rpy="0 0 0" />
+    <parent link="right_side_link" />
+    <child link="front_right_shoulder_link" />
+    <axis xyz="-1 2.1167E-05 9.1685E-05" />
+    <limit lower="-0.8" upper="0.8" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="front_right_knee_link">
+    <inertial>
+      <origin xyz="-0.0163710579816588 -0.025335304234355 0.0436819299069255" rpy="0 0 0" />
+      <mass value="0.0469762290004462" />
+      <inertia ixx="0.000115008138991003" ixy="-9.245774373626E-06" ixz="1.6195157879913E-05"
+               iyy="8.9955520215524E-05" iyz="3.85590798612249E-05" izz="4.17627254222805E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_right_knee_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_right_knee_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="front_right_knee_joint" type="revolute">
+    <origin xyz="0.053596 -0.12233 -0.039931" rpy="0 0 0" />
+    <parent link="front_right_shoulder_link" />
+    <child link="front_right_knee_link" />
+    <axis xyz="1 -2.1167E-05 -9.1685E-05" />
+    <limit lower="-1.2" upper="1.2" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="front_right_wheel_link">
+    <inertial>
+      <origin xyz="0.00345943903176227 -3.08602156906534E-05 -0.000243959080044265" rpy="0 0 0" />
+      <mass value="0.0364044019910403" />
+      <inertia ixx="4.90745203444793E-05" ixy="-5.23235544885243E-10" ixz="-2.0870404791462E-09"
+               iyy="2.49257374202785E-05" iyz="2.48762408851665E-10" izz="2.49045978223675E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_right_wheel_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/front_right_wheel_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="front_right_wheel_joint" type="continuous">
+    <origin xyz="-0.041948 -0.061778 0.099869" rpy="0 0 0" />
+    <parent link="front_right_knee_link" />
+    <child link="front_right_wheel_link" />
+    <axis xyz="-1 2.1167E-05 9.1685E-05" />
+  </joint>
+
+  <link name="back_right_shoulder">
+    <inertial>
+      <origin xyz="0.0242695324977471 -0.0614138569421465 -0.0279378617441666" rpy="0 0 0" />
+      <mass value="0.111437039478952" />
+      <inertia ixx="0.000343154721881414" ixy="-7.2973448673755E-06" ixz="3.77507481151408E-06"
+               iyy="0.000103165600887418" iyz="-9.02053207896858E-05" izz="0.000311999943885521" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_right_shoulder.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_right_shoulder.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="back_right_shoulder_joint" type="revolute">
+    <origin xyz="-0.1642 0.03083 -0.14998" rpy="0 0 0" />
+    <parent link="right_side_link" />
+    <child link="back_right_shoulder" />
+    <axis xyz="-1 2.1167E-05 9.1685E-05" />
+    <limit lower="-0.8" upper="0.8" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="back_right_knee_link">
+    <inertial>
+      <origin xyz="-0.0163711186740965 -0.0241768659895147 0.0427525168965597" rpy="0 0 0" />
+      <mass value="0.0469762290094901" />
+      <inertia ixx="0.000115008139456327" ixy="-9.24255479627753E-06" ixz="1.61969941358188E-05"
+               iyy="8.99708451385747E-05" iyz="3.85494988641251E-05" izz="4.1747400025856E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_right_knee_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_right_knee_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="back_right_knee_joint" type="revolute">
+    <origin xyz="0.053597 -0.12348 -0.038973" rpy="0 0 0" />
+    <parent link="back_right_shoulder" />
+    <child link="back_right_knee_link" />
+    <axis xyz="1 -2.1167E-05 -9.1685E-05" />
+    <limit lower="-1.2" upper="1.2" effort="10" velocity="1.0" />
+  </joint>
+
+  <link name="back_right_wheel_link">
+    <inertial>
+      <origin xyz="0.00345943910730329 -3.08603876238989E-05 -0.000243959791768056" rpy="0 0 0" />
+      <mass value="0.0364044018127897" />
+      <inertia ixx="4.90745202829949E-05" ixy="-5.23161734068817E-10" ixz="-2.08708256418111E-09"
+               iyy="2.4925737321398E-05" iyz="2.48922240929157E-10" izz="2.49045978752581E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_right_wheel_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_right_wheel_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="back_right_wheel_joint" type="continuous">
+    <origin xyz="-0.041948 -0.060609 0.098947" rpy="0 0 0" />
+    <parent link="back_right_knee_link" />
+    <child link="back_right_wheel_link" />
+    <axis xyz="-1 2.1167E-05 9.1685E-05" />
+  </joint>
+
+  <link name="corners_link">
+    <inertial>
+      <origin xyz="0.000324114816951604 0.0284392028967639 -0.0146126822788208" rpy="0 0 0" />
+      <mass value="0.146747406930242" />
+      <inertia ixx="7.67482081787967E-05" ixy="6.70357166079442E-08" ixz="-2.16016594060275E-08"
+               iyy="3.91454359004541E-05" iyz="5.00131913026472E-08" izz="9.26967601450286E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/corners_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 0.25" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/corners_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="corners" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="corners_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <link name="back_link">
+    <inertial>
+      <origin xyz="-0.000524467996778188 0.0309102349168932 -0.21400009211431" rpy="0 0 0" />
+      <mass value="0.0219009258696528" />
+      <inertia ixx="9.01748711815603E-06" ixy="1.72140663791308E-08" ixz="-3.7662634450594E-09"
+               iyy="2.55520713024216E-05" iyz="2.54054436541843E-12" izz="3.45367059200823E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_link.STL" /></geometry>
+      <material name=""><color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/back_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="back" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="back_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <link name="mobile_link">
+    <inertial>
+      <origin xyz="0.00224575020693452 0.114333266227171 0.171233744428172" rpy="0 0 0" />
+      <mass value="0.115030973355293" />
+      <inertia ixx="5.27502191216411E-05" ixy="5.25869316446247E-21" ixz="-1.50060090980378E-05"
+               iyy="0.000239040093881845" iyz="-8.63982259577036E-21" izz="0.000287966191541454" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/mobile_link.STL" /></geometry>
+      <material name=""><color rgba="0.00784313725490196 0.23921568627451 0.823529411764706 1" /></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry><mesh filename="package://bangar/meshes/mobile_link.STL" /></geometry>
+    </collision>
+  </link>
+
+  <joint name="mobile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="mobile_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+</robot>

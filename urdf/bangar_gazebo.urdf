@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<robot name="bangar">
+
+  <material name="white"><color rgba="1 1 1 0.9"/></material>
+  <material name="grey"><color rgba="0.79 0.82 0.93 0.9"/></material>
+  <material name="blue"><color rgba="0.008 0.239 0.824 1"/></material>
+
+  <gazebo>
+    <plugin filename="libgz-sim-joint-state-publisher-system.so" name="gz::sim::systems::JointStatePublisher">
+      <topic>/joint_states</topic>
+    </plugin>
+    <plugin filename="libgz-sim-pose-publisher-system.so" name="gz::sim::systems::PosePublisher">
+      <publish_link_pose>true</publish_link_pose>
+      <publish_nested_model_pose>true</publish_nested_model_pose>
+    </plugin>
+  </gazebo>
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="3.0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0" iyy="0.08" iyz="0" izz="0.05"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://bangar/meshes/base_link.STL"/></geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.35 0.06 0.25"/></geometry>
+    </collision>
+  </link>
+
+  <link name="left_side_link">
+    <inertial><origin xyz="0.09 0.03 0"/><mass value="0.3"/><inertia ixx="0.002" ixy="0" ixz="0" iyy="0.002" iyz="0" izz="0.001"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/left_side_link.STL"/></geometry><material name="grey"/></visual>
+    <collision><origin xyz="0.09 0.03 0"/><geometry><box size="0.2 0.05 0.05"/></geometry></collision>
+  </link>
+  <joint name="left_side" type="fixed"><origin xyz="0 0 0"/><parent link="base_link"/><child link="left_side_link"/></joint>
+
+  <link name="right_side_link">
+    <inertial><origin xyz="-0.09 0.03 0"/><mass value="0.3"/><inertia ixx="0.002" ixy="0" ixz="0" iyy="0.002" iyz="0" izz="0.001"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/right_side_link.STL"/></geometry><material name="grey"/></visual>
+    <collision><origin xyz="-0.09 0.03 0"/><geometry><box size="0.2 0.05 0.05"/></geometry></collision>
+  </link>
+  <joint name="right_side" type="fixed"><origin xyz="0 0 0"/><parent link="base_link"/><child link="right_side_link"/></joint>
+
+  <link name="front_left_shoulder_link">
+    <inertial><origin xyz="0 -0.06 -0.03"/><mass value="0.15"/><inertia ixx="3e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.3"/><geometry><mesh filename="package://bangar/meshes/front_left_shoulder_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 0 -0.3"/><geometry><box size="0.04 0.04 0.15"/></geometry></collision>
+  </link>
+  <joint name="front_left_shoulder_joint" type="revolute">
+    <origin xyz="0.16 0.03 0.15"/><parent link="left_side_link"/><child link="front_left_shoulder_link"/>
+    <axis xyz="1 0 0"/><limit lower="-0.8" upper="0.8" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="front_left_knee_link">
+    <inertial><origin xyz="0.015 -0.025 0.04"/><mass value="0.06"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="5e-5"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/front_left_knee_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.02 0.05"/><geometry><box size="0.04 0.04 0.1"/></geometry></collision>
+  </link>
+  <joint name="front_left_knee_joint" type="revolute">
+    <origin xyz="-0.05 -0.12 -0.04"/><parent link="front_left_shoulder_link"/><child link="front_left_knee_link"/>
+    <axis xyz="-1 0 0"/><limit lower="-1.2" upper="1.2" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="front_left_wheel_link">
+    <inertial><mass value="0.2"/><inertia ixx="4e-4" ixy="0" ixz="0" iyy="4e-4" iyz="0" izz="4e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/front_left_wheel_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 0 0" rpy="0 1.5708 0"/><geometry><cylinder radius="0.05" length="0.03"/></geometry></collision>
+  </link>
+  <joint name="front_left_wheel_joint" type="continuous">
+    <origin xyz="0.045 -0.06 0.1"/><parent link="front_left_knee_link"/><child link="front_left_wheel_link"/>
+    <axis xyz="1 0 0"/><dynamics damping="1.0" friction="1.5"/>
+  </joint>
+
+  <link name="front_right_shoulder_link">
+    <inertial><origin xyz="0 -0.06 -0.03"/><mass value="0.15"/><inertia ixx="3e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/front_right_shoulder_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.06 -0.02"/><geometry><box size="0.04 0.04 0.15"/></geometry></collision>
+  </link>
+  <joint name="front_right_shoulder_joint" type="revolute">
+    <origin xyz="-0.16 0.03 0.15"/><parent link="right_side_link"/><child link="front_right_shoulder_link"/>
+    <axis xyz="-1 0 0"/><limit lower="-0.8" upper="0.8" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="front_right_knee_link">
+    <inertial><origin xyz="-0.015 -0.025 0.04"/><mass value="0.06"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="5e-5"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/front_right_knee_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.02 0.05"/><geometry><box size="0.04 0.04 0.1"/></geometry></collision>
+  </link>
+  <joint name="front_right_knee_joint" type="revolute">
+    <origin xyz="0.05 -0.12 -0.04"/><parent link="front_right_shoulder_link"/><child link="front_right_knee_link"/>
+    <axis xyz="1 0 0"/><limit lower="-1.2" upper="1.2" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="front_right_wheel_link">
+    <inertial><mass value="0.2"/><inertia ixx="4e-4" ixy="0" ixz="0" iyy="4e-4" iyz="0" izz="4e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/front_right_wheel_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 0 0" rpy="0 1.5708 0"/><geometry><cylinder radius="0.05" length="0.03"/></geometry></collision>
+  </link>
+  <joint name="front_right_wheel_joint" type="continuous">
+    <origin xyz="-0.045 -0.06 0.1"/><parent link="front_right_knee_link"/><child link="front_right_wheel_link"/>
+    <axis xyz="-1 0 0"/><dynamics damping="1.0" friction="1.5"/>
+  </joint>
+
+  <link name="back_left_shoulder_link">
+    <inertial><origin xyz="0 -0.06 -0.03"/><mass value="0.15"/><inertia ixx="3e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/back_left_shoulder_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.06 -0.02"/><geometry><box size="0.04 0.04 0.15"/></geometry></collision>
+  </link>
+  <joint name="back_left_shoulder_joint" type="revolute">
+    <origin xyz="0.16 0.03 -0.15"/><parent link="left_side_link"/><child link="back_left_shoulder_link"/>
+    <axis xyz="1 0 0"/><limit lower="-0.8" upper="0.8" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="back_left_knee_link">
+    <inertial><origin xyz="0.015 -0.025 0.04"/><mass value="0.06"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="5e-5"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/back_left_knee_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.02 0.05"/><geometry><box size="0.04 0.04 0.1"/></geometry></collision>
+  </link>
+  <joint name="back_left_knee_joint" type="revolute">
+    <origin xyz="-0.05 -0.12 -0.04"/><parent link="back_left_shoulder_link"/><child link="back_left_knee_link"/>
+    <axis xyz="-1 0 0"/><limit lower="-1.4" upper="1.4" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="back_left_wheel_link">
+    <inertial><mass value="0.2"/><inertia ixx="4e-4" ixy="0" ixz="0" iyy="4e-4" iyz="0" izz="4e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/back_left_wheel_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 0 0" rpy="0 1.5708 0"/><geometry><cylinder radius="0.05" length="0.03"/></geometry></collision>
+  </link>
+  <joint name="back_left_wheel_joint" type="continuous">
+    <origin xyz="0.045 -0.06 0.1"/><parent link="back_left_knee_link"/><child link="back_left_wheel_link"/>
+    <axis xyz="1 0 0"/><dynamics damping="1.0" friction="1.5"/>
+  </joint>
+
+  <link name="back_right_shoulder">
+    <inertial><origin xyz="0 -0.06 -0.03"/><mass value="0.15"/><inertia ixx="3e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/back_right_shoulder.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.06 -0.02"/><geometry><box size="0.04 0.04 0.15"/></geometry></collision>
+  </link>
+  <joint name="back_right_shoulder_joint" type="revolute">
+    <origin xyz="-0.16 0.03 -0.15"/><parent link="right_side_link"/><child link="back_right_shoulder"/>
+    <axis xyz="-1 0 0"/><limit lower="-0.8" upper="0.8" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="back_right_knee_link">
+    <inertial><origin xyz="-0.015 -0.025 0.04"/><mass value="0.06"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="5e-5"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/back_right_knee_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 -0.02 0.05"/><geometry><box size="0.04 0.04 0.1"/></geometry></collision>
+  </link>
+  <joint name="back_right_knee_joint" type="revolute">
+    <origin xyz="0.05 -0.12 -0.04"/><parent link="back_right_shoulder"/><child link="back_right_knee_link"/>
+    <axis xyz="1 0 0"/><limit lower="-1.4" upper="1.4" effort="50" velocity="3.0"/><dynamics damping="1.0" friction="0.1"/>
+  </joint>
+
+  <link name="back_right_wheel_link">
+    <inertial><mass value="0.2"/><inertia ixx="4e-4" ixy="0" ixz="0" iyy="4e-4" iyz="0" izz="4e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/back_right_wheel_link.STL"/></geometry></visual>
+    <collision><origin xyz="0 0 0" rpy="0 1.5708 0"/><geometry><cylinder radius="0.05" length="0.03"/></geometry></collision>
+  </link>
+  <joint name="back_right_wheel_joint" type="continuous">
+    <origin xyz="-0.045 -0.06 0.1"/><parent link="back_right_knee_link"/><child link="back_right_wheel_link"/>
+    <axis xyz="-1 0 0"/><dynamics damping="1.0" friction="1.5"/>
+  </joint>
+
+  <link name="corners_link">
+    <inertial><origin xyz="0 0.03 -0.015"/><mass value="0.15"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/corners_link.STL"/></geometry></visual>
+    <collision><geometry><box size="0.35 0.05 0.25"/></geometry></collision>
+  </link>
+  <joint name="corners" type="fixed"><origin xyz="0 0 0"/><parent link="base_link"/><child link="corners_link"/></joint>
+
+  <link name="mobile_link">
+    <inertial><origin xyz="0 0.11 0.17"/><mass value="0.12"/><inertia ixx="5e-4" ixy="0" ixz="0" iyy="5e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><geometry><mesh filename="package://bangar/meshes/mobile_link.STL"/></geometry><material name="blue"/></visual>
+    <collision><origin xyz="0 0.1 0.15"/><geometry><box size="0.08 0.05 0.15"/></geometry></collision>
+  </link>
+  <joint name="mobile_joint" type="fixed"><origin xyz="0 0 0"/><parent link="base_link"/><child link="mobile_link"/></joint>
+
+  <gazebo>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>front_left_shoulder_joint</joint_name><topic>/cmd/front_left_shoulder</topic>
+      <p_gain>150</p_gain><i_gain>5</i_gain><d_gain>12</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>front_left_knee_joint</joint_name><topic>/cmd/front_left_knee</topic>
+      <p_gain>40</p_gain><i_gain>1</i_gain><d_gain>8</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>back_left_shoulder_joint</joint_name><topic>/cmd/back_left_shoulder</topic>
+      <p_gain>150</p_gain><i_gain>5</i_gain><d_gain>12</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>back_left_knee_joint</joint_name><topic>/cmd/back_left_knee</topic>
+      <p_gain>40</p_gain><i_gain>1</i_gain><d_gain>8</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>front_right_shoulder_joint</joint_name><topic>/cmd/front_right_shoulder</topic>
+      <p_gain>150</p_gain><i_gain>5</i_gain><d_gain>12</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>front_right_knee_joint</joint_name><topic>/cmd/front_right_knee</topic>
+      <p_gain>40</p_gain><i_gain>1</i_gain><d_gain>8</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>back_right_shoulder_joint</joint_name><topic>/cmd/back_right_shoulder</topic>
+      <p_gain>150</p_gain><i_gain>5</i_gain><d_gain>12</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-position-controller-system.so" name="gz::sim::systems::JointPositionController">
+      <joint_name>back_right_knee_joint</joint_name><topic>/cmd/back_right_knee</topic>
+      <p_gain>40</p_gain><i_gain>1</i_gain><d_gain>8</d_gain>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="libgz-sim-joint-velocity-controller-system.so" name="gz::sim::systems::JointVelocityController">
+      <joint_name>front_left_wheel_joint</joint_name><topic>/cmd/front_left_wheel</topic>
+      <p_gain>10.0</p_gain><i_gain>0.1</i_gain><d_gain>0.01</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-velocity-controller-system.so" name="gz::sim::systems::JointVelocityController">
+      <joint_name>back_left_wheel_joint</joint_name><topic>/cmd/back_left_wheel</topic>
+      <p_gain>10.0</p_gain><i_gain>0.1</i_gain><d_gain>0.01</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-velocity-controller-system.so" name="gz::sim::systems::JointVelocityController">
+      <joint_name>front_right_wheel_joint</joint_name><topic>/cmd/front_right_wheel</topic>
+      <p_gain>10.0</p_gain><i_gain>0.1</i_gain><d_gain>0.01</d_gain>
+    </plugin>
+    <plugin filename="libgz-sim-joint-velocity-controller-system.so" name="gz::sim::systems::JointVelocityController">
+      <joint_name>back_right_wheel_joint</joint_name><topic>/cmd/back_right_wheel</topic>
+      <p_gain>10.0</p_gain><i_gain>0.1</i_gain><d_gain>0.01</d_gain>
+    </plugin>
+  </gazebo>
+
+</robot>

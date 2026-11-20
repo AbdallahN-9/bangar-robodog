@@ -1,0 +1,23 @@
+# OS artifacts
+.DS_Store
+*.swp
+*~
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Colcon & ROS artifacts
+build/
+install/
+log/
+COLCON_IGNORE
+
+# Large CAD export logs
+export.log
+*.log
+
+# Compressed files
+*.zip
+*.tar.gz
