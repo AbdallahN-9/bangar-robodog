@@ -1,59 +1,88 @@
 # Bangar Robodog (بانجار) 🐕⚙️
 
+### An Assistive Wheeled-Quadruped Robot Dog: Custom PCB Hardware, ROS 2 & Gazebo Simulation
+
 [![ROS 2](https://img.shields.io/badge/ROS_2-Jazzy%20%7C%20Humble-blue.svg)](https://docs.ros.org/)
 [![Gazebo](https://img.shields.io/badge/Gazebo_Sim-Harmonic-orange.svg)](https://gazebosim.org/)
+[![KiCad](https://img.shields.io/badge/KiCad-v8%20%7C%20v7-314CB0.svg)](https://kicad.org/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-BSD--3--Clause-green.svg)](LICENSE)
 
-**Bangar** is a custom-designed **wheeled-quadruped robot dog** featuring hybrid legged and wheeled locomotion. Developed in **ROS 2** and simulated in **Gazebo Sim**, Bangar combines the rough-terrain clearance of quadruped trot gaits with the energy efficiency and agile turning of motorized wheels.
+**Bangar** is a custom-engineered **wheeled-quadruped robot dog** created as an assistive, domestic companion. Conceived to address elderly loneliness and provide non-intrusive health/emergency monitoring, Bangar bridges custom embedded electronics, 12-DoF hybrid locomotion, and high-fidelity physics simulation in ROS 2 and Gazebo Sim.
 
 <p align="center">
-  <img src="docs/images/bangar_concept_cover.png" alt="Bangar Concept Art" width="85%" />
+  <img src="docs/images/bangar_concept_cover.png" alt="Bangar Concept" width="85%" />
   <br />
-  <em>Conceptual design of Bangar as an assistive, domestic & warehouse companion robot.</em>
+  <em>Concept: Bangar as an assistive companion in home environments.</em>
 </p>
 
 ---
 
-## 📸 Simulation & Design Showcase
+## 🛠️ Hardware & Custom PCB
+
+Bangar features a custom-designed, fully integrated motherboard designed in **KiCad** ($107.25\text{ mm} \times 92.0\text{ mm}$) to handle power management, high-current servo actuation, and distributed sensor processing:
+
+| Fabricated & Populated Motherboard | KiCad 3D Component Layout |
+| :---: | :---: |
+| ![Manufactured PCB](docs/images/bangar_pcb_physical.jpg) | ![KiCad 3D Viewer](docs/images/bangar_pcb_3d_render.jpg) |
+| **Physical PCB:** Dual microcontroller sockets, screw power rails, blade fuse, and JST sensor headers. | **3D CAD View:** Component clearances, PCA9685 PWM headers, and terminal layouts. |
+
+### Motherboard Architecture & Electronics Specifications
+
+* **Processing & Logic:** Dual **Arduino Nano v3.x** microcontrollers for distributed motor control, kinematics timing, and sensor telemetry.
+* **Actuator Control:** Dedicated 16-channel **PCA9685** 12-bit PWM servo controller interface (`PCA_In`) driving the 8 shoulder and knee servo motors (`J1`–`J8`, `J18`–`J21`).
+* **Multi-Rail Power System:**
+  * **12V High-Power Input/Output:** Screw terminal distribution for wheel drive motors and main battery input.
+  * **6V High-Current Rail:** Dedicated high-amperage power distribution specifically tuned for the 8 high-torque leg servos.
+  * **5V Logic Rail:** Regulated supply for microcontrollers, sensors, and logic lines.
+  * **Circuit Protection:** Built-in automotive blade fuse holder and heavy-duty primary power toggle switch.
+* **Sensors & Expansion Interfaces:**
+  * Multi-channel **Ultrasonic Range Sensors** (`UltraS1`, `UltraS2`, etc.) via polarized JST connectors.
+  * **Hall-Effect Wheel Encoders** (`Hall_Effect2`, `Hall_Effect3`) for wheel odometry and speed feedback.
+  * **I2C Telemetry Bus:** Exposed SDA, SCL, 5V, GND, and INT breakout for IMU and expansion peripherals.
+* **Fabrication Files:** Complete Gerber archives (`hardware/gerber/bangar_107.25x92.0mm_gerber.zip`) ready for direct manufacturing (JLCPCB, PCBWay, etc.).
+
+---
+
+## 📸 Simulation & Kinematics Showcase
 
 | Gazebo Sim Warehouse Environment | RViz2 Kinematics & TF Model |
 | :---: | :---: |
 | ![Gazebo Sim](docs/images/gazebo_simulation.png) | ![RViz2 View](docs/images/rviz_model.png) |
-| **Gazebo Sim**: Physics simulation, custom friction zones, and obstacle arenas. | **RViz2**: Joint frames, links, acrylic chassis, and top phone mount. |
+| **Gazebo Sim:** ODE physics, custom friction zones ($\mu=0.2$ to $\mu=50$), and navigation arenas. | **RViz2:** Joint coordinate frames, link geometry, acrylic chassis, and top phone mount. |
 
 <p align="center">
   <img src="docs/images/bangar_cad_render.png" alt="Bangar CAD Render" width="75%" />
   <br />
-  <em>CAD rendering showing leg linkages, wheel assemblies, chassis acrylics, and sensor cutouts.</em>
+  <em>CAD render showcasing mechanical leg linkages, wheel assemblies, chassis cutouts, and smartphone mount.</em>
 </p>
 
 ---
 
-## 🌟 Key Highlights
+## 🌟 Key Locomotion & Software Features
 
-- **Hybrid Locomotion System:**
-  - **Quadruped Trot Gait:** Diagonal pair trotting (FL+BR and FR+BL) with tuned shoulder sweeps and knee clearance arches.
-  - **Continuous Wheeled Drive:** 4 powered wheels (Pololu 60×8mm) located at each foot for rapid flat-surface transit and zero-radius in-place yaw rotations.
-  - **Dynamic Poses:** Dedicated sitting, standing, and stopping postures with smooth cosine-eased transitions.
-- **Full Gazebo Sim (Harmonic / gz-sim) Integration:**
-  - Position PID controllers for all 8 leg joints (shoulders and knees).
-  - Velocity controllers for all 4 foot-mounted wheels.
-  - Custom `warehouse_world.sdf` featuring a $30\text{m} \times 24\text{m}$ warehouse arena, color-coded navigation goals, and a low-friction terrain zone ($\mu = 0.2$) to evaluate traction.
-- **Perception & Visual Odometry:**
-  - Top chassis mount designed for a smartphone head unit.
-  - Integration with DroidCam and OpenCV for real-time ArUco marker pose tracking and 2D map localization.
-  - Topic bridges configured for multi-channel ultrasonic range sensing.
+- **Hybrid Legged-Wheeled Locomotion:**
+  - **Quadruped Trot Gait:** Diagonal pair trotting (FL+BR in phase, FR+BL in antiphase) with coordinated shoulder sweeps and knee clearance arches.
+  - **Differential Wheeled Drive:** 4 powered wheels (Pololu 60×8mm) located at the feet enable zero-radius in-place turns and fast flat-ground translation.
+  - **Smooth Eased Poses:** Sitting, standing, and stopping postures generated via cosine easing interpolation.
+- **Gazebo Sim Physics & Controllers:**
+  - 8 Position PID controllers for shoulders ($P=150$) and knees ($P=40$).
+  - 4 Velocity controllers for wheel driving ($P=10.0$).
+  - Custom `warehouse_world.sdf` featuring a $30\text{m} \times 24\text{m}$ warehouse arena with colored navigation goals and a low-friction terrain zone ($\mu=0.2$) for traction testing.
+- **Perception & Localization:**
+  - Smartphone head bracket (`mobile_link`) with DroidCam IP stream integration.
+  - Real-time ArUco fiducial marker tracking (`cv2.aruco`) for 2D world pose estimation.
+  - ROS 2 message bridging for multi-directional ultrasonic proximity scanning.
 
 ---
 
-## 📐 Kinematics & Joint Architecture
+## 📐 Kinematics & Joint Mapping
 
 Bangar possesses **12 actuated Degrees of Freedom (DoF)**:
 
-| Joint Group | Joints | Type | Limits / Velocity | Actuator Role |
+| Joint Group | Joints | Type | Limits / Range | Function |
 | :--- | :--- | :--- | :--- | :--- |
-| **Shoulders (4×)** | `front_left_shoulder_joint`<br>`front_right_shoulder_joint`<br>`back_left_shoulder_joint`<br>`back_right_shoulder_joint` | Revolute | $\pm 0.8\text{ rad}$ ($50\text{ N}\cdot\text{m}$) | Forward/backward leg swing |
+| **Shoulders (4×)** | `front_left_shoulder_joint`<br>`front_right_shoulder_joint`<br>`back_left_shoulder_joint`<br>`back_right_shoulder_joint` | Revolute | $\pm 0.8\text{ rad}$ ($50\text{ N}\cdot\text{m}$) | Forward/rearward leg swing |
 | **Knees (4×)** | `front_left_knee_joint`<br>`front_right_knee_joint`<br>`back_left_knee_joint`<br>`back_right_knee_joint` | Revolute | $\pm 1.2\text{ rad}$ / $\pm 1.4\text{ rad}$ | Leg lifting & ground clearance |
 | **Wheels (4×)** | `front_left_wheel_joint`<br>`front_right_wheel_joint`<br>`back_left_wheel_joint`<br>`back_right_wheel_joint` | Continuous | Continuous ($10\text{ rad/s}$) | Driving & skid-steer turning |
 
@@ -65,30 +94,33 @@ Bangar possesses **12 actuated Degrees of Freedom (DoF)**:
 bangar/
 ├── CMakeLists.txt              # Package build definitions & install targets
 ├── package.xml                 # ROS 2 package metadata and dependencies
-├── README.md                   # Project documentation
-├── .gitignore                  # Git exclusions for build artifacts
+├── README.md                   # Comprehensive project documentation
+├── .gitignore                  # Git exclusions for build & temporary files
+├── hardware/                   # Custom embedded electronics design
+│   ├── kicad/                  # KiCad PCB project, schematic & layout files
+│   └── gerber/                 # Ready-to-order manufacturing Gerber packages
 ├── docs/
-│   └── images/                 # Simulation screenshots and CAD renders
+│   └── images/                 # Simulation screenshots, PCB photos & CAD renders
 ├── config/
-│   └── joint_names_Bangar.yaml # Joint mappings configuration
+│   └── joint_names_Bangar.yaml # Joint names configuration
 ├── launch/
-│   ├── gazebo_launch.py        # Primary headless/macOS-safe Gazebo launch
+│   ├── gazebo_launch.py        # Complete headless/macOS-safe Gazebo launch
 │   ├── gazebo_walk.launch.py   # Gazebo simulation with walk controller
 │   ├── display.launch.py       # Basic robot state display in RViz
 │   └── rviz.launch.py          # Interactive RViz2 visualization
 ├── urdf/
 │   ├── bangar.urdf             # Baseline URDF model
-│   ├── bangar_gazebo.urdf      # Gazebo-optimized model with plugins & PIDs
-│   └── bangar.csv              # Mass properties and link measurements
+│   ├── bangar_gazebo.urdf      # Gazebo simulation model with plugins & PIDs
+│   └── bangar.csv              # Link masses, origins, and inertias
 ├── worlds/
-│   └── warehouse_world.sdf     # Custom Gazebo simulation warehouse
-├── meshes/                     # STL surface meshes for all links & wheels
+│   └── warehouse_world.sdf     # Custom warehouse simulation arena
+├── meshes/                     # STL geometry files for robot links & wheels
 └── bangar/                     # ROS 2 Python nodes
     ├── __init__.py
     ├── bangar_controller.py    # Master state machine controller
     ├── walk_node.py            # Diagonal trot gait generator
     ├── wheel_node.py           # Wheel velocity publisher
-    ├── sit_node.py             # Cosine-interpolated sitting posture
+    ├── sit_node.py             # Cosine-interpolated sitting motion
     ├── turn_left_node.py       # Differential skid turn (left)
     ├── turn_right_node.py      # Differential skid turn (right)
     └── camera_node.py          # ArUco marker pose estimator via camera feed
@@ -102,13 +134,14 @@ bangar/
 
 - **OS:** Linux (Ubuntu 22.04 / 24.04) or macOS (Apple Silicon / Intel via Conda/RoboStack)
 - **ROS 2:** Jazzy Jalisco or Humble Hawksbill
-- **Gazebo Sim:** Gazebo Harmonic or Fortress
+- **Gazebo Sim:** Gazebo Harmonic or Fortress (`gz-sim8`)
 - **ROS-Gazebo Bridge:** `ros_gz_bridge`, `ros_gz_sim`
-- **Python Libraries:** `opencv-python`, `numpy`, `cv_bridge`
+- **KiCad (Optional):** KiCad v7 or v8 (to view/edit PCB schematics)
+- **Python Dependencies:** `opencv-python`, `numpy`, `cv_bridge`
 
 ### 2. Workspace Setup & Build
 
-Clone this package into your ROS 2 workspace's `src` folder:
+Clone into your ROS 2 workspace's `src` folder:
 
 ```bash
 # Create and navigate to your ROS 2 workspace
@@ -137,29 +170,29 @@ source install/setup.bash
 
 ### Option A: Launch Full Gazebo Simulation
 
-To launch the complete simulation including physics server, robot spawn, topic bridges, and the high-level controller:
+To launch the physics server, robot spawn, topic bridges, and behavioral controller:
 
 ```bash
 ros2 launch bangar gazebo_launch.py
 ```
 
-*Tip for macOS users:* The launch file runs Gazebo server in headless mode (`-s`) by default for maximum stability across architectures.
+*Note for macOS users:* Gazebo server runs headless (`-s`) by default for optimal performance and stability.
 
 ### Option B: Interactive State & Motion Control
 
-Once the Gazebo environment is running, command Bangar's behaviors on the `/bangar/mode` topic:
+Command Bangar's locomotion modes on the `/bangar/mode` topic:
 
 ```bash
-# Start walking (diagonal trot gait + forward wheel drive)
+# Start walking (diagonal trot gait + wheel drive)
 ros2 topic pub --once /bangar/mode std_msgs/msg/String "{data: 'walk'}"
 
-# Turn left in place
+# Turn left in place (differential wheel drive)
 ros2 topic pub --once /bangar/mode std_msgs/msg/String "{data: 'turn_left'}"
 
-# Turn right in place
+# Turn right in place (differential wheel drive)
 ros2 topic pub --once /bangar/mode std_msgs/msg/String "{data: 'turn_right'}"
 
-# Sit down smoothly
+# Sit down smoothly (cosine-interpolated rear leg fold)
 ros2 topic pub --once /bangar/mode std_msgs/msg/String "{data: 'sit'}"
 
 # Stand / Stop
@@ -168,7 +201,7 @@ ros2 topic pub --once /bangar/mode std_msgs/msg/String "{data: 'stop'}"
 
 ### Option C: View Kinematics in RViz2
 
-To inspect the robot's URDF model and test gaits visually without physics:
+To inspect the robot's URDF model and test gait movements visually without physics:
 
 ```bash
 ros2 launch bangar rviz.launch.py
@@ -176,7 +209,7 @@ ros2 launch bangar rviz.launch.py
 
 ### Option D: Vision & Marker Tracking
 
-If utilizing a camera stream (e.g., via DroidCam at `http://<phone_ip>:4747/video`):
+To test ArUco marker pose localization from an IP phone camera feed:
 
 ```bash
 ros2 run bangar camera_node.py
@@ -202,6 +235,7 @@ ros2 run bangar camera_node.py
 - **Developer:** Abdallah ([@AbdallahN-9](https://github.com/AbdallahN-9))
 - **Email:** [abdallah.alexcs@gmail.com](mailto:abdallah.alexcs@gmail.com)
 - **CAD & Mechanical Design:** Modeled in SolidWorks with `SW2URDF`.
+- **Electronics & PCB:** Designed in KiCad.
 
 ---
 
