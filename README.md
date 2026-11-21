@@ -1,4 +1,4 @@
-# Bangar Robodog (بانجار) 🐕⚙️
+# Bangar Robodog (بنجر) 🐕⚙️
 
 ### An Assistive Wheeled-Quadruped Robot Dog: Custom Embedded Hardware, ROS 2 & Gazebo Simulation
 
