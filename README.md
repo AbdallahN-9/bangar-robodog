@@ -1,31 +1,52 @@
 # Bangar Robodog (بانجار) 🐕⚙️
 
-### An Assistive Wheeled-Quadruped Robot Dog: Custom PCB Hardware, ROS 2 & Gazebo Simulation
+### An Assistive Wheeled-Quadruped Robot Dog: Custom Embedded Hardware, ROS 2 & Gazebo Simulation
 
 [![ROS 2](https://img.shields.io/badge/ROS_2-Jazzy%20%7C%20Humble-blue.svg)](https://docs.ros.org/)
 [![Gazebo](https://img.shields.io/badge/Gazebo_Sim-Harmonic-orange.svg)](https://gazebosim.org/)
 [![KiCad](https://img.shields.io/badge/KiCad-v8%20%7C%20v7-314CB0.svg)](https://kicad.org/)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://python.org)
+[![IEEE](https://img.shields.io/badge/IEEE-ICMISI%202026%20Winner-00629B.svg)](https://www.ieee.org/)
 [![License](https://img.shields.io/badge/License-BSD--3--Clause-green.svg)](LICENSE)
 
-**Bangar** is a custom-engineered **wheeled-quadruped robot dog** created as an assistive, domestic companion. Conceived to address elderly loneliness and provide non-intrusive health/emergency monitoring, Bangar bridges custom embedded electronics, 12-DoF hybrid locomotion, and high-fidelity physics simulation in ROS 2 and Gazebo Sim.
+**Bangar** is an award-winning, custom-engineered **wheeled-quadruped robot dog** developed as an assistive, domestic companion robot. Designed to alleviate elderly loneliness and offer non-intrusive health/emergency monitoring, Bangar integrates custom embedded electronics, 12-DoF hybrid locomotion, and high-fidelity physics simulation in ROS 2 and Gazebo Sim.
+
+---
+
+## 👥 The Team & IEEE Recognition
+
+Project Bangar was engineered by:
+
+* **Abdallah Nabil** — *Electrical System & Gazebo Simulation*
+* **Omar Khaled** — *Mechanical Design & Control Software*
+* **Omar Barakat** — *Mechanical Assembly & Computer Vision*
+* **Khaled Aboelmaety** — *Sensor Integration & System Debugging*
+
+| IEEE ICMISI 2026 Exhibition & Award | IEEE Certificate of Recognition |
+| :---: | :---: |
+| ![Team Award](docs/images/team_award_icmisi.jpg) | ![IEEE Certificate](docs/images/ieee_certificate.jpg) |
+| **1st Place**: The team showcasing Bangar at the 2026 IEEE 3rd International Conference on Machine Intelligence and Smart Innovation (ICMISI 2026). | **Official Recognition**: Presented by IEEE and the Arab Academy for Science, Technology & Maritime Transport (AASTMT). |
 
 <p align="center">
   <img src="docs/images/bangar_concept_cover.png" alt="Bangar Concept" width="85%" />
   <br />
-  <em>Concept: Bangar as an assistive companion in home environments.</em>
+  <em>Concept: Bangar as an assistive companion in home living environments.</em>
 </p>
 
 ---
 
-## 🛠️ Hardware & Custom PCB
+## 🛠️ Custom Hardware, PCB & Wiring Integration
 
-Bangar features a custom-designed, fully integrated motherboard designed in **KiCad** ($107.25\text{ mm} \times 92.0\text{ mm}$) to handle power management, high-current servo actuation, and distributed sensor processing:
+Bangar is powered by a custom-designed, multi-layer motherboard developed in **KiCad** ($107.25\text{ mm} \times 92.0\text{ mm}$) to handle power regulation, high-torque servo actuation, and distributed sensor processing:
 
-| Fabricated & Populated Motherboard | KiCad 3D Component Layout |
+| Fabricated Motherboard | KiCad 3D Component Layout |
 | :---: | :---: |
 | ![Manufactured PCB](docs/images/bangar_pcb_physical.jpg) | ![KiCad 3D Viewer](docs/images/bangar_pcb_3d_render.jpg) |
-| **Physical PCB:** Dual microcontroller sockets, screw power rails, blade fuse, and JST sensor headers. | **3D CAD View:** Component clearances, PCA9685 PWM headers, and terminal layouts. |
+| **Physical PCB:** Dual microcontroller sockets, screw power rails, blade fuse, and JST headers. | **3D CAD Layout:** Component placement, PCA9685 PWM headers, and terminal connectors. |
+
+| Workbench Wiring & Sensor Testing | Full In-Chassis Electrical Integration |
+| :---: | :---: |
+| ![Testbench Wiring](docs/images/pcb_wiring_testbench.jpg) | ![Chassis Wiring](docs/images/robot_chassis_wiring.jpg) |
+| **Bench Testing:** Full testbench wiring with ultrasonic sensor arrays and dual Nano logic. | **Chassis Integration:** LiPo battery pack, buck converters, motherboard, and servo cabling. |
 
 ### Motherboard Architecture & Electronics Specifications
 
@@ -100,7 +121,7 @@ bangar/
 │   ├── kicad/                  # KiCad PCB project, schematic & layout files
 │   └── gerber/                 # Ready-to-order manufacturing Gerber packages
 ├── docs/
-│   └── images/                 # Simulation screenshots, PCB photos & CAD renders
+│   └── images/                 # Simulation screenshots, PCB photos, wiring & CAD renders
 ├── config/
 │   └── joint_names_Bangar.yaml # Joint names configuration
 ├── launch/
@@ -227,15 +248,6 @@ ros2 run bangar camera_node.py
 | `/cmd/*_knee` | `std_msgs/msg/Float64` | `bangar_controller` | Commanded knee joint target angle (rad) |
 | `/cmd/*_wheel` | `std_msgs/msg/Float64` | `bangar_controller` | Commanded wheel joint angular velocity |
 | `/bangar/pose_estimate` | `geometry_msgs/msg/PoseWithCovarianceStamped` | `camera_node` | Visual pose estimated from ArUco markers |
-
----
-
-## 👤 Author & Acknowledgments
-
-- **Developer:** Abdallah ([@AbdallahN-9](https://github.com/AbdallahN-9))
-- **Email:** [abdallah.alexcs@gmail.com](mailto:abdallah.alexcs@gmail.com)
-- **CAD & Mechanical Design:** Modeled in SolidWorks with `SW2URDF`.
-- **Electronics & PCB:** Designed in KiCad.
 
 ---
 
