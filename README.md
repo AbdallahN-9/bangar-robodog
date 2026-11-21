@@ -24,7 +24,7 @@ Project Bangar was engineered by:
 | IEEE ICMISI 2026 Exhibition & Award | IEEE Certificate of Recognition |
 | :---: | :---: |
 | ![Team Award](docs/images/team_award_icmisi.jpg) | ![IEEE Certificate](docs/images/ieee_certificate.jpg) |
-| **1st Place**: The team showcasing Bangar at the 2026 IEEE 3rd International Conference on Machine Intelligence and Smart Innovation (ICMISI 2026). | **Official Recognition**: Presented by IEEE and the Arab Academy for Science, Technology & Maritime Transport (AASTMT). |
+| The team showcasing Bangar at the 2026 IEEE 3rd International Conference on Machine Intelligence and Smart Innovation (ICMISI 2026). | **Official Recognition**: Presented by IEEE and the Arab Academy for Science, Technology & Maritime Transport (AASTMT). |
 
 <p align="center">
   <img src="docs/images/bangar_concept_cover.png" alt="Bangar Concept" width="85%" />
